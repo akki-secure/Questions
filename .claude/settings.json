@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git push *)",
+            "command": "cmd=$(jq -r '.tool_input.command // \"\"'); if echo \"$cmd\" | grep -qE '\\b(main|master)\\b' || echo \"$cmd\" | grep -qE '\\s(--force|-f|--force-with-lease)(\\s|$)'; then printf '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"mainブランチへの直接pushは禁止されています。Pull Requestを使用してください。\"}}'; fi",
+            "timeout": 10,
+            "statusMessage": "mainブランチへのpushをチェック中..."
+          }
+        ]
+      }
+    ]
+  }
+}
